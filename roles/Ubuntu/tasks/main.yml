@@ -1,35 +1,35 @@
-# Installation of NTP
-  -  name: Install NTP (Chrony) in Controller (Ubuntu)
+# NTP
+  -  name: Install NTP 
      apt:
        name: chrony
        state: present
 
-  -  name: Enable and Start NTP in Controller (Ubuntu)
+  -  name: Enable and Start NTP
      systemd:
        name: chrony
        state: restarted
        enabled: true
 
-# Installation of OpenStack Packages 
-  -  name: Installation of OpenStack Client in Controller (Ubuntu)
+# OpenStack 
+  -  name: Installation of OpenStack Client 
      apt:
        name: python3-openstackclient
        state: present
 
-# Installation of SQL Database
-  -  name: Installation of MariaDB and MySQL in Controller (Ubuntu)
+# SQL 
+  -  name: Installation of MariaDB and MySQL 
      apt:
        name:
          -  mariadb-server
          -  python3-pymysql
        state: present
 
-  -  name: Creation of Configuration of MySQL for MariaDB in Controller (Ubuntu)
+  -  name: Creation of Configuration of MySQL for MariaDB
      file:
        path: /etc/mysql/mariadb.conf.d/99-openstack.cnf
        state: touch
 
-  -  name: Configuration of MySQL for MariaDB in Controller (Ubuntu)
+  -  name: Configuration of MySQL for MariaDB 
      copy:
        dest: /etc/mysql/mariadb.conf.d/99-openstack.cnf
        content: |
@@ -41,7 +41,7 @@
          collation-server = utf8_general_ci
          character-set-server = utf8
 
-  -  name: Enable and Start MySQL and MariaDB in Controller (Ubuntu)
+  -  name: Enable and Start MySQL and MariaDB
      systemd:
        name: "{{ item }}"
        state: restarted
@@ -51,59 +51,59 @@
        - mariadb
 
 
-# Installation of Message Queue
-  -  name: Installation of Message Queue (RabbitMQ-Server) in Controller (Ubuntu)
+# Message Queue
+  -  name: Installation of Message Queue (RabbitMQ-Server)
      apt:
        name: rabbitmq-server
        state: present
 
-  -  name: Remove OpenStack as User for Message Queue in Controller (Ubuntu)
+  -  name: Remove OpenStack as User for Message Queue 
      command: "rabbitmqctl delete_user openstack"
      ignore_errors: yes
      changed_when: false
 
-  -  name: Add OpenStack as User for Message Queue in Controller (Ubuntu)
+  -  name: Add OpenStack as User for Message Queue 
      command: "rabbitmqctl add_user openstack RABBIT_PASS"
      ignore_errors: yes
      changed_when: false
 
-  -  name: Modify Permissions for Openstack for Message Queue in Controller (Ubuntu)
+  -  name: Modify Permissions for Openstack for Message Queue 
      command: "rabbitmqctl set_permissions openstack '.*' '.*' '.*'"
      ignore_errors: yes
      changed_when: false
 
-# Installation of Memcached
-  -  name: Installation of Memcached in Controller (Ubuntu)
+# Memcached
+  -  name: Installation of Memcached 
      apt:
        name:
          -  memcached
          -  python3-memcache
        state: present
 
-  -  name: Creation of Configuration of Memcached in Controller (Ubuntu)
+  -  name: Creation of Configuration of Memcached 
      template:
-       src: roles/Controller_Memcached/templates/memcached.conf.j2
+       src: roles/Ubuntu/templates/memcached.conf.j2
        dest: /etc/memcached.conf
        mode: 0644
 
-  -  name: Enable and Start Memcached in Controller (Ubuntu)
+  -  name: Enable and Start Memcached 
      systemd:
        name: memcached
        state: restarted
        enabled: true
 
-# Installation of ETCD
-  -  name: Installation of ETCD in Controller (Ubuntu)
+# ETCD
+  -  name: Installation of ETCD 
      apt:
        name: etcd
        state: present
 
-  -  name: Configuration of ETCD in Controller (Ubuntu)
+  -  name: Configuration of ETCD 
      template:
-       src: roles/Controller_Etcd/templates/etcd.conf.j2
+       src: roles/Ubuntu/templates/etcd.conf.j2
        dest: /etc/default/etcd
 
-  -  name: Enable and Start ETCD in Controller (Ubuntu)
+  -  name: Enable and Start ETCD 
      systemd:
        name: etcd
        state: restarted

@@ -4,35 +4,13 @@
    become: true
    pre_tasks:
 
-#   -  name: Install Updates (Ubuntu)
-#      apt:
-#        upgrade: dist
-#        update_cache: yes
-#      when: ansible_distribution == "Ubuntu"
-
-   -  name: Install updates (CentOS)
-      yum:
-        update_only: yes
+   -  name: Install Updates (Ubuntu)
+      apt:
+        upgrade: dist
         update_cache: yes
-      when: ansible_distribution == "CentOS"
+      when: ansible_distribution == "Ubuntu"
 
-#-  hosts: Controller
-#   become: true
-#   roles:
-#     -  Controller_NTP
-#     -  Controller_OpenStackPack
-#     -  Controller_SQL
-#     -  Controller_MessageQueue
-#     -  Controller_Memcached
-#     -  Controller_Etcd
-
--  hosts: Compute
+-  hosts: Ubuntu
    become: true
    roles:
-     -  Compute_Pre-requisite
-     -  Compute_NTP
-     -  Compute_OpenStackPack
-     -  Compute_SQL
-     -  Compute_MessageQueue
-     -  Compute_Memcached
-     -  Compute_Etcd
+     -  Ubuntu
